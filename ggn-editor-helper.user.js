@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn editor helper
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0rc7
+// @version      1.0.0rc8
 // @description  Various fixes and helpers useful for moderators and editors
 // @author       ZeDoCaixao
 // @match        https://gazellegames.net/torrents.php?id=*
