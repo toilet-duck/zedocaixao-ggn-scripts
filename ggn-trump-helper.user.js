@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Trump Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.2.0
 // @match        https://gazellegames.net/torrents.php?id=*
 // @require      https://code.jquery.com/jquery-3.1.0.min.js
 // @grant        GM.xmlHttpRequest
@@ -14,14 +14,14 @@ function add_report_helper() {
         var torrent_id = $(this).attr("href").replace(/.*&id=/, '');
         console.log(torrent_id);
         var form = `<tr id="rp_helper"><td>
-          <form action="reportsv2.php?action=takereport" enctype="multipart/form-data" method="post" id="report_table">
+          <form action="/reportsv2.php?action=takereport" enctype="multipart/form-data" method="post" id="report_table">
           <input type="hidden" name="submit" value="true">
           <input type="hidden" name="torrentid" value="`+torrent_id+`">
           <input type="hidden" name="categoryid" value="1">
           <input type="hidden" name="type" value="trump">
           <input id="sitelink" type="hidden" name="sitelink" size="70" value="">
-          <textarea id="extra" rows="5" cols="60" name="extra"/></td>
-          <td colspan="5"><input type="submit" value="Submit report">
+          <textarea id="extra" rows="5" cols="60" name="extra"/>
+          <input type="submit" value="Submit report">
           </form><td></tr>`;
         $(this).after(' | <a href="javascript:;" id="rp_'+torrent_id+'">TP');
         $('#rp_'+torrent_id).click(function (event) {
