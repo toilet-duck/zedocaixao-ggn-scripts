@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn New Uploady
 // @namespace    https://gazellegames.net/
-// @version      0.2250
+// @version      0.2260
 // @description  Steam Uploady for GGn
 // @author       NeutronNoir, ZeDoCaixao
 // @match        https://gazellegames.net/upload.php*
@@ -34,7 +34,7 @@ function html2bb(str) {
     str = str.replace(/< *\/ *h[12] *>/g, "[/b][/u][/align]\n");
     str = str.replace(/\&quot;/g, "\"");
     str = str.replace(/\&amp;/g, "&");
-    str = str.replace(/< *img *src="([^"]*)".*>/g, "$1 [important][sup]replace this image with text, delete it, or re-host to whitelisted image host[/sup][/important]");
+    str = str.replace(/< *img *src="([^"]*)".*>/g, "\n");
     str = str.replace(/< *a [^>]*>/g, "");
     str = str.replace(/< *\/ *a *>/g, "");
     str = str.replace(/< *p *>/g, "\n\n");
@@ -44,6 +44,7 @@ function html2bb(str) {
     str = str.replace(//g, "\"");
     str = str.replace(/  +/g, " ");
     str = str.replace(/\n +/g, "\n");
+    str = str.replace(/\n\n\n+/g, "\n\n");
     str = str.replace(/\n\n\n+/g, "\n\n");
     str = str.replace(/\n\n\n+/g, "\n\n");
     str = str.replace(/\n\n\n+/g, "\n\n");
