@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn New Uploady
 // @namespace    https://gazellegames.net/
-// @version      0.23.0
+// @version      0.2300
 // @description  Steam Uploady for GGn
 // @author       NeutronNoir, ZeDoCaixao
 // @match        https://gazellegames.net/upload.php*
