@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn New Uploady
 // @namespace    https://gazellegames.net/
-// @version      0.2260
+// @version      0.23.0
 // @description  Steam Uploady for GGn
 // @author       NeutronNoir, ZeDoCaixao
 // @match        https://gazellegames.net/upload.php*
@@ -44,13 +44,27 @@ function html2bb(str) {
     str = str.replace(//g, "\"");
     str = str.replace(/  +/g, " ");
     str = str.replace(/\n +/g, "\n");
-    str = str.replace(/\n\n\n+/g, "\n\n");
-    str = str.replace(/\n\n\n+/g, "\n\n");
-    str = str.replace(/\n\n\n+/g, "\n\n");
-    str = str.replace(/\n\n\n+/g, "\n\n");
+    str = str.replace(/\n\n\n+/gm, "\n\n");
+    str = str.replace(/\n\n\n+/gm, "\n\n");
     str = str.replace(/\[\/b\]\[\/u\]\[\/align\]\n\n/g, "[/b][/u][/align]\n");
     str = str.replace(/\n\n\[\*\]/g, "\n[*]");
     return str;
+}
+
+function fix_emptylines(str) {
+    var lst = str.split("\n");
+    var result = "";
+    var empty = 1;
+    lst.forEach(function(s) {
+        if (s) {
+            empty = 0;
+            result = result + s + "\n";
+        } else if (empty < 1) {
+            empty = empty + 1;
+            result = result + "\n";
+        }
+    });
+    return result;
 }
 
 function pretty_sr(str) {
@@ -69,7 +83,7 @@ function fill_form(response) {
     var gameInfo = response.response[$("#steamid").val()].data;
     var about = gameInfo.about_the_game;
     if (about === '') { about = gameInfo.detailed_description; }
-    about = "[align=center][b][u]About the game[/u][/b][/align]\n" + html2bb(about);
+    about = "[align=center][b][u]About the game[/u][/b][/align]\n" + html2bb(about).trim();
     var year = gameInfo.release_date.date.split(", ").pop();
     var addScreens = true;
     var screens = document.getElementsByName("screens[]");
@@ -135,6 +149,7 @@ function fill_form(response) {
                 }
             }
     });
+    $(desc_field).val(fix_emptylines($(desc_field).val()));
 }
 
 (function() {
