@@ -13,7 +13,7 @@
         var torrent_id = el.href.replace(/.*torrentid=/, '');
         var newA = document.createElement("a");
         newA.innerHTML = "CP";
-        newA.setAttribute('title', 'copyDescriptionContent');
+        newA.setAttribute('title', 'Copy Description');
         newA.onclick = function () {
             GM_setClipboard("Not copied yet");
             fetch("https://gazellegames.net/torrents.php?action=edit&id="+torrent_id)

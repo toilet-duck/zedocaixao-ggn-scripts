@@ -24,7 +24,7 @@ function add_report_helper() {
           <input type="submit" value="Submit report">
           </form><td></tr>`;
         $(this).after(
-            ' | <a href="javascript:;" title="trumpHelper" id="rp_'
+            ' | <a href="javascript:;" title="Trump" id="rp_'
             +torrent_id
             +'">TP');
         $('#rp_'+torrent_id).click(function (event) {
