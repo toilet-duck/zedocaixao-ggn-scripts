@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GGn Copy Desc
-// @version      0.3
+// @version      0.4
 // @match        https://gazellegames.net/torrents.php?id=*
 // @grant        GM.xmlHttpRequest
 // @grant        GM_xmlhttpRequest
@@ -13,6 +13,7 @@
         var torrent_id = el.href.replace(/.*torrentid=/, '');
         var newA = document.createElement("a");
         newA.innerHTML = "CP";
+        newA.setAttribute('title', 'copyDescriptionContent');
         newA.onclick = function () {
             GM_setClipboard("Not copied yet");
             fetch("https://gazellegames.net/torrents.php?action=edit&id="+torrent_id)

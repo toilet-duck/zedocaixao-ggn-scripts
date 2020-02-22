@@ -23,7 +23,10 @@ function add_report_helper() {
           <textarea id="extra" rows="5" cols="60" name="extra"/>
           <input type="submit" value="Submit report">
           </form><td></tr>`;
-        $(this).after(' | <a href="javascript:;" id="rp_'+torrent_id+'">TP');
+        $(this).after(
+            ' | <a href="javascript:;" title="trumpHelper" id="rp_'
+            +torrent_id
+            +'">TP');
         $('#rp_'+torrent_id).click(function (event) {
             $("#rp_helper").remove();
             $(this).closest("tr").after(form);
