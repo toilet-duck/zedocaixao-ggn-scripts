@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Trump Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.2.0
+// @version      0.2.1
 // @match        https://gazellegames.net/torrents.php?id=*
 // @require      https://code.jquery.com/jquery-3.1.0.min.js
 // @grant        GM.xmlHttpRequest
