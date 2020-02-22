@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GGn Copy Desc
-// @version      0.5
+// @version      0.5.1
 // @match        https://gazellegames.net/torrents.php?id=*
 // @grant        GM.xmlHttpRequest
 // @grant        GM_xmlhttpRequest
