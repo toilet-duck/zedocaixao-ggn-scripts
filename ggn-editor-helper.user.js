@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn editor helper
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0rc8
+// @version      1.0.0rc9
 // @description  Various fixes and helpers useful for moderators and editors
 // @author       ZeDoCaixao
 // @match        https://gazellegames.net/torrents.php?id=*
@@ -106,7 +106,7 @@ function sortable_screenshots() {
                 <input type="hidden" name="action" value="takeimagesedit">
                 <input type="hidden" name="groupid" value="` + group_id + `">
                 <input type="hidden" name="categoryid" value="1">
-                cover <input type="text" name="image" size="92" value="`
+                cover <input type="text" id="mhCover" name="image" size="92" value="`
                 + coverUrl + `">
                 <h3>Screenshots</h3>
                 <div id="mh_screenshotsFormScreenshots"
@@ -125,13 +125,14 @@ function sortable_screenshots() {
             var url = $(this).attr('href').replace('postimg.org', 'postimg.cc');
             $("#mh_screenshotsFormScreenshots").append(
                 '<input type="text" id="mh_scrInput' +
-                scrFormCounter + 
+                scrFormCounter +
                 '" name="screens[]" idstyle="width: 90%;" value="' +
                 url+'" style="width: 45%"/>&nbsp;');
             $(this).remove();
             imageUpload(url,
                         document.getElementById('mh_scrInput'+scrFormCounter));
         });
+        imageUpload(coverUrl, document.getElementById("mhCover"));
     });
 }
 
@@ -146,18 +147,50 @@ function add_screenshot_to_list(url) {
     );
 }
 
+const isValidUrl = function(str){
+  const regexp = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+  return regexp.test(str);
+};
+
 function do_steam_things() {
     var steamUrl = $('#weblinksdiv a[title="Steam"]').attr('href');
     var steamId = /.*\.com\/app\/([0-9]+)/.exec(steamUrl)[1];
     var depotsUrl = 'https://steamdb.info/app/'+steamId+'/depots/#depots';
     $('#modhelperLeftBox').prepend('<div class="head">Steam ID: '
                                   + steamId+'</div>');
-
+    var cvrHeigth = document.querySelector('.box_albumart img').naturalHeight;
+    var cvrWidth = document.querySelector('.box_albumart img').naturalWidth;
+    // $('.box_albumart').after('<p>('+cvrWidth+'×'+cvrHeigth+') <a href="javascript:;" id="steamCoverDo">Check Steam</a>');
     $('#modhelperLeftBox ul').append('<li><a href="'+depotsUrl+'">Depots');
-    /*$('#modhelperLeftBox ul').append('<li><a href="javascript:;" id="steamScreenshotsDo">Steam Screenshots');*/
+
     $('#mh_screenButtons')
         .prepend('<a href="javascript:;" id="steamScreenshotsDo">[steam]</a>');
+    $('#mh_screenButtons').prepend('   <a href="javascript:;" id="steamCoverDo">[cover (' +cvrWidth+'×'+cvrHeigth+')]</a>  ');
     $('#mh_screenButtons a').css('margin', '0px');
+
+    var steamCoverUrl = "https://steamcdn-a.akamaihd.net/steam/apps/"+steamId+"/library_600x900_2x.jpg";
+
+    $('#steamCoverDo').click(function () {
+        GM.xmlHttpRequest({
+            method: "GET",
+            url: steamCoverUrl,
+            onload: function (response) {
+                if(response.status == 200) {
+                    $('.box_albumart img').attr("src", steamCoverUrl);
+                } else {
+                    alert("aaa");
+                }
+                /*var gameInfo = response.response[steamId].data;
+                $('#mh_bad_shots').html($('#mh_good_screenshots').html());
+                $('#mh_good_screenshots').html('');
+                gameInfo.screenshots.forEach( function(screen, index) {
+                    var scrUrl = screen.path_full.split("?")[0];
+                    if (index >= 20) return;
+                    add_screenshot_to_list(scrUrl);
+                });*/
+            }
+        });
+    });
 
     $('#steamScreenshotsDo').click(function () {
         sortable_screenshots();
