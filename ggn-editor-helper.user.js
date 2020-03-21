@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn editor helper
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Various fixes and helpers useful for moderators and editors
 // @author       ZeDoCaixao
 // @match        https://gazellegames.net/torrents.php?id=*
@@ -177,8 +177,9 @@ function do_steam_things() {
             onload: function (response) {
                 if(response.status == 200) {
                     $('.box_albumart img').attr("src", steamCoverUrl);
+                    $('#steamCoverDo').html("cover replaced! ");
                 } else {
-                    $('#steamCoverDo').html("no cover on steam");
+                    $('#steamCoverDo').html("no cover on steam! ");
                 }
                 /*var gameInfo = response.response[steamId].data;
                 $('#mh_bad_shots').html($('#mh_good_screenshots').html());
