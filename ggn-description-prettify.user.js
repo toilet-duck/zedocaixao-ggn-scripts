@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Description prettify
 // @namespace    http://tampermonkey.net/
-// @version      0.5.1
+// @version      0.6.0
 // @description  Helper functions for description formatting
 // @author       ZeDoCaixao
 // @include      https://gazellegames.net/torrents.php?action=editgroup*
@@ -25,15 +25,28 @@ function addButton(id, title, callback) {
     addButton("fixabout", "Fix About", fix_about);
     addButton("fixreqs", "Fix SR", fix_reqs);
     addButton("addabout", "Add About", add_about);
+    addButton("fixcaps", "Fix common CAPS", fix_caps);
     addButton("makeitgood_1", "MAKE IT GOOD!", makeitgood);
 })();
 
 function makeitgood() {
+    fix_caps();
     remove_junk();
     fix_features();
     fix_about();
     fix_reqs();
     add_about();
+}
+
+function fix_caps() {
+    'use strict';
+    var el = $('textarea[name="body"]');
+    var res = el.val()
+        .replace("KEY FEATURES", "KEY FEATURES")
+        .replace("FEATURES", "Features")
+        .replace("MINIMUM", "Minimum")
+        .replace("RECOMMENDED", "Recommended");
+    el.val(res);
 }
 
 function add_about() {
