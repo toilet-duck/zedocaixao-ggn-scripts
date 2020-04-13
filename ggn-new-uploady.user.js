@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn New Uploady
 // @namespace    https://gazellegames.net/
-// @version      0.2300
+// @version      0.2400
 // @description  Steam Uploady for GGn
 // @author       NeutronNoir, ZeDoCaixao
 // @match        https://gazellegames.net/upload.php*
@@ -150,6 +150,10 @@ function fill_form(response) {
             }
     });
     $(desc_field).val(fix_emptylines($(desc_field).val()));
+    if (gameInfo.metacritic) {
+        $("#meta").val(gameInfo.metacritic.score);
+        $("#metauri").val(gameInfo.metacritic.url.split("?")[0] + "/critic-reviews");
+    }
 }
 
 (function() {
