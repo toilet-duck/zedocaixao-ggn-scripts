@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn New Uploady
 // @namespace    https://gazellegames.net/
-// @version      0.2400
+// @version      0.2401
 // @description  Steam Uploady for GGn
 // @author       NeutronNoir, ZeDoCaixao
 // @match        https://gazellegames.net/upload.php*
@@ -91,7 +91,7 @@ function fill_form(response) {
     gameInfo.screenshots.forEach(function(screen, index) {
         //The site doesn't accept more than 20 screenshots
         if (index >= 20) return;
-        if (index >= 3) add_screen.click();
+        if (index >= 4) add_screen.click();
         screens[index].value = screen.path_full.split("?")[0];
     });
     var platform = "Windows"
