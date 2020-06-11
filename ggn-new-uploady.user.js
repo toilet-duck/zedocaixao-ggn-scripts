@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn New Uploady
 // @namespace    https://gazellegames.net/
-// @version      0.2401
+// @version      0.2500
 // @description  Steam Uploady for GGn
 // @author       NeutronNoir, ZeDoCaixao
 // @match        https://gazellegames.net/upload.php*
@@ -139,7 +139,7 @@ function fill_form(response) {
     $(desc_field).val($(desc_field).val() + sr);
     $(cover_field).val(gameInfo.header_image.split("?")[0]);       //Get the image URL
     var big_cover = "https://steamcdn-a.akamaihd.net/steam/apps/" + $("#steamid").val() + "/library_600x900_2x.jpg";
-    var request_image = new GM.xmlHttpRequest({
+    var request_image = GM.xmlHttpRequest({
             method: "GET",                  //We call the Steam API to get info on the game
             url: big_cover,
             responseType: "json",
@@ -169,7 +169,7 @@ function fill_form(response) {
         $('#fill_mac').click(function () { $("#platform").val("Mac"); });
     }
     $("#steamid").blur(function() { //After the "appid" input loses focus
-        var request = new GM.xmlHttpRequest({
+        var request = GM.xmlHttpRequest({
             method: "GET",                  //We call the Steam API to get info on the game
             url: "http://store.steampowered.com/api/appdetails?l=en&appids=" + $("#steamid").val(),
             responseType: "json",
