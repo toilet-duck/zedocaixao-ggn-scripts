@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn editor helper
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.1.0
 // @description  Various fixes and helpers useful for moderators and editors
 // @author       ZeDoCaixao
 // @match        https://gazellegames.net/torrents.php?id=*
@@ -21,8 +21,6 @@
     add_srrdb();
     add_rename_form();
     hl_bad_images();
-    check_gog_collection();
-    check_humble_collection();
     add_left_box()
     try { add_sort_screenshots (); } catch (err) {}
     try { add_gogdb_search(); } catch (err) {}
@@ -226,54 +224,6 @@ function hl_bad_images() {
     });
 }
 
-function check_gog_collection() {
-    if ($('a[href="collections.php?id=25"]').length > 0) {
-        // Already in GOG collection
-        return
-    }
-    if ($('a[href="collections.php?id=1763"]').length > 0) {
-        // in Removed from GOG collection
-        return
-    }
-    $('.edition_info strong:contains("GOG")').each(function() {
-        $(this).after(' <a class="gog_coll_add">Add to GOG collection</a>');
-        $(".gog_coll_add").click(function() {
-            to_coll(25, ".gog_coll_add");
-        } );
-        $(".gog_coll_add").css({color: "red"});
-    });
-}
-
-function check_humble_collection() {
-    if ($('a[href="collections.php?id=133"]').length > 0) { return }
-    $('.edition_info strong:contains("Humble")').each(function() {
-        $(this)
-            .after(' <a class="humble_coll_add">Add to Humble collection</a>');
-        $(".humble_coll_add").click(function() {
-            to_coll(133, ".humble_coll_add");
-        });
-        $(".humble_coll_add").css({color: "red"});
-    });
-}
-
-
-// Add current torrent to collection
-function to_coll(collId, elementId){
-    var http = new XMLHttpRequest();
-    var url = "collections.php";
-    var params = "action=add_torrent&auth="+authkey+"&collageid="+collId
-                 +"&url="+window.location.href;
-    http.open("POST", url, true);
-    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    http.onreadystatechange = function() {
-        if(http.readyState == 4 && http.status == 200) {
-            $(elementId).remove();
-            return true;
-        }
-    };
-    http.send(params);
-    return true;
-}
 
 function add_rename_form() {
     $("#display_name").html($("#display_name").html()
