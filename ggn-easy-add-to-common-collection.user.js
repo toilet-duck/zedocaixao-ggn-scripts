@@ -4,7 +4,7 @@
 // @description Add a group to often used collection from group page
 // @include     https://gazellegames.net/torrents.php?id=*
 // @include     https://gazellegames.net/torrents.php?page=*&id=*
-// @version     1.2.4
+// @version     1.2.6
 // @grant       GM_xmlhttpRequest
 // ==/UserScript==
 /* globals authkey */
@@ -15,12 +15,13 @@
  *********************************************************/
 var collections = [
     [0   , "Commercial"              ],
-    [133 , "Humble"                  ],
-    [25  , "GOG"                     ],
     [152 , "Early Access"            ],
-    [717 , "GOG InDev"               ],
     [5148, "Out of Early Access"     ],
     [164 , "Crowdfunded"             ],
+    [156 , "Free$"                   ],
+    [3933, "Libre"                   ],
+    [1763, "Removed from GOG"        ],
+    [1536, "Removed from Steam"      ],
 
     [0   , "Engines"                 ],
     [263 , "Unity"                   ],
@@ -39,13 +40,65 @@ var collections = [
     [476 , "Single Screen MP"        ],
     [77  , "LAN"                     ],
 
-    [0   , "Themes"                  ],
+    [0   , "VR"                      ],
+    [559 , "VR Support"              ],
+    [683 , "VR Only"                 ],
+    [968 , "OSVR"                    ],
+    [1117, "Seated VR"               ],
+    [1118, "Standing VR"             ],
+    [1119, "Room Scale VR"           ],
+    [1884, "Tracked Motion Controls" ],
+    [738 , "Oculus Rift"             ],
+    [1116, "Oculus Touch"            ],
+    [739 , "HTC Vive"                ],
+    [5679, "Valve Index"             ],
+
+    [0   , "Mechanics"               ],
     [902 , "Procedural Generation"   ],
     [2380, "Permadeath"              ],
+    [3813, "Turn-Based Combad"       ],
+
+    [0   , "Themes"                  ],
     [856 , "Female Protagonist"      ],
     [586 , "Zombie"                  ],
+    [3994, "Vampire"                 ],
+    [3721, "Furry"                   ],
+    [624 , "Political"               ],
+
+    [0   , "Settings"                ],
     [673 , "WW2"                     ],
     [3025, "WW1"                     ],
+    [6751, "Space"                   ],
+    [585 , "Post-Apoc"               ],
+    [3622, "Cyberpunk"               ],
+    [3169, "Steampunk"               ],
+    [5515, "Medieval"                ],
+
+    [0   , "VN"                      ],
+    [4502, "Slice of Life"           ],
+    [1692, "Native English"          ],
+    [62  , "English Translated"      ],
+    [1792, "Visual Novels"           ],
+    [5078, "Episodic Story"          ],
+    [3034, "Kemonomimi"              ],
+    [3031, "Catgirls"                ],
+    [2862, "Monster Girls"           ],
+    [3032, "Yuri"                    ],
+    [3033, "Yaoi"                    ],
+    [3035, "Otome"                   ],
+
+    [0   , "Adult"                   ],
+    [5129, "Rape"                    ],
+    [1793, "Eroge"                   ],
+    [1794, "Nukige"                  ],
+    [3041, "Loli"                    ],
+    [3185, "Shota"                   ],
+    [4908, "Scat"                    ],
+    [3039, "Futanari"                ],
+    [5844, "Netorare"                ],
+    [5845, "Netori"                  ],
+    [5846, "Netorase"                ],
+    [4138, "Uncensored"              ],
 
     [0   , "Other"                   ],
     [969 , "GGn Internals"           ],
