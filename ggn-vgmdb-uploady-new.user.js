@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn VGMDB Uploady NEW
 // @namespace    https://orbitalzero.ovh/scripts
-// @version      0.7.1
+// @version      0.7.2
 // @include      https://gazellegames.net/upload.php*
 // @match        https://gazellegames.net/torrents.php?action=editgroup*
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
@@ -50,7 +50,7 @@ function insert_button(handler) {
     $("#catalog_number").on("blur", function() {
         $("#vgmdburi").val($(this).val());
         var input = this;
-        var request = new GM.xmlHttpRequest({
+        var request = GM.xmlHttpRequest({
             "method": "GET",
             "url": $(this).val(),
             "onload": handle_page(handler, input)
@@ -145,10 +145,10 @@ function get_desc(env) {
             var tds = $(this).find("td");
             desc += tds.first().find("span").text()
                 + "      "
-                + tds.eq(1).text()
+                + tds.eq(1).text().trim()
                 + " ".repeat(Math.ceil(Math.ceil(max_title_length)
                                        - tds.eq(1).text().length))
-                + tds.last().text() + "\n";
+                + tds.last().text().trim() + "\n";
         });
         desc += "\n";
     });
