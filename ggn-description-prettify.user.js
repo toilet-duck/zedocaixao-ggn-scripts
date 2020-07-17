@@ -1,46 +1,118 @@
 // ==UserScript==
 // @name         GGn Description prettify
 // @namespace    http://tampermonkey.net/
-// @version      0.6.0
+// @version      0.6.0a
 // @description  Helper functions for description formatting
 // @author       ZeDoCaixao
 // @include      https://gazellegames.net/torrents.php?action=editgroup*
+// @include      https://gazellegames.net/upload.php*
 // @require      https://code.jquery.com/jquery-3.1.0.min.js
+// @require      https://userscripts-mirror.org/scripts/source/107941.user.js
 // @grant        GM_xmlhttpRequest
 // @grant        GM.xmlhttpRequest
+// @grant        GM_setValue
+// @grant        GM_getValue
 // ==/UserScript==
 /* globals jQuery, $ */
 
-function addButton(id, title, callback) {
-    id = "prettify_"+id;
-    $('textarea[name="body"]')
+function addButton(id, title, callback, textarea_name) {
+    id = "prettify_"+id+textarea_name;
+
+    $('textarea[name="' + textarea_name + '"]')
         .after('<input type="button" id="'+id+'" value="'+title+'"/>');
     $('#'+id).click(callback);
 }
 
-(function() {
-    'use strict';
-    addButton("removejunk", "Remove Junk", remove_junk);
-    addButton("fixfeatures", "Fix Features", fix_features);
-    addButton("fixabout", "Fix About", fix_about);
-    addButton("fixreqs", "Fix SR", fix_reqs);
-    addButton("addabout", "Add About", add_about);
-    addButton("fixcaps", "Fix common CAPS", fix_caps);
-    addButton("makeitgood_1", "MAKE IT GOOD!", makeitgood);
-})();
-
-function makeitgood() {
-    fix_caps();
-    remove_junk();
-    fix_features();
-    fix_about();
-    fix_reqs();
-    add_about();
+function get_textarea_names() {
+    if (window.location.pathname == '/torrents.php') {
+        var textarea_names = ["body"];
+    } else {
+        var textarea_names = ["album_desc", "release_desc"];
+    }
+    return textarea_names;
 }
 
-function fix_caps() {
+function add_macro(a, textarea_name) {
+    return function() {
+        return add_macro_args(a, textarea_name);
+    }
+}
+
+function add_user_macro() {
     'use strict';
-    var el = $('textarea[name="body"]');
+    var button_name = window.prompt("Enter the button name (i.e. Add About):");
+    var macro_text = window.prompt("Enter the macro text (i.e. [align=center][b][u]About the game[/u][/b][/align]):");
+    console.log("'button_name' = " + button_name + "'macro_text' = " + macro_text);
+    if ((button_name == "") || (macro_text == "")) {
+        return;
+    } else {
+        window.alert("Macro successfully added. Refresh page for changes to take effect.");
+    }
+    var macros = GM_SuperValue.get("user_macros", {});
+    macros[button_name] = macro_text;
+    GM_SuperValue.set("user_macros", macros);
+}
+
+function clear_macros() {
+    'use strict';
+    GM_SuperValue.set("user_macros", {});
+}
+
+function callback_args(callback, textarea_name) {
+    return function() {
+        return callback(textarea_name);
+    }
+}
+
+(function() {
+    'use strict';
+
+    var macros = GM_SuperValue.get("user_macros", {});
+    console.log(macros);
+
+    var textarea_names = get_textarea_names();
+    for (var textarea_name of textarea_names) {
+        for (var key in macros) {
+            addButton(key.replace(" ", "_"), key, add_macro(macros[key], textarea_name), textarea_name);
+        }
+        addButton("removejunk", "Remove Junk", callback_args(remove_junk, textarea_name), textarea_name);
+        addButton("fixfeatures", "Fix Features", callback_args(fix_features, textarea_name), textarea_name);
+        addButton("fixabout", "Fix About", callback_args(fix_about, textarea_name), textarea_name);
+        addButton("fixreqs", "Fix SR", callback_args(fix_reqs, textarea_name), textarea_name);
+        addButton("addabout", "Add About", callback_args(add_about, textarea_name), textarea_name);
+        addButton("fixcaps", "Fix common CAPS", callback_args(fix_caps, textarea_name), textarea_name);
+        addButton("makeitgood_1", "MAKE IT GOOD!", callback_args(makeitgood, textarea_name), textarea_name);
+
+        addButton("clear_macros", "Clear ALL Macros", clear_macros, textarea_name);
+        addButton("add_macro", "Add Macro", add_user_macro, textarea_name);
+
+    }
+})();
+
+function add_macro_args(macro_text, textarea_name) {
+  'use strict';
+  var el = $('textarea[name="' + textarea_name + '"]');
+
+  var cursorPos = $('textarea[name="' + textarea_name + '"]').prop('selectionStart');
+  var v = $('textarea[name="' + textarea_name + '"]').val();
+  var textBefore = v.substring(0,  cursorPos);
+  var textAfter  = v.substring(cursorPos, v.length);
+
+  $('textarea[name="' + textarea_name + '"]').val(textBefore + macro_text + textAfter);
+}
+
+function makeitgood(textarea_name) {
+    fix_caps(textarea_name);
+    remove_junk(textarea_name);
+    fix_features(textarea_name);
+    fix_about(textarea_name);
+    fix_reqs(textarea_name);
+    add_about(textarea_name);
+}
+
+function fix_caps(textarea_name) {
+    'use strict';
+    var el = $('textarea[name="' + textarea_name + '"]');
     var res = el.val()
         .replace("KEY FEATURES", "KEY FEATURES")
         .replace("FEATURES", "Features")
@@ -49,18 +121,18 @@ function fix_caps() {
     el.val(res);
 }
 
-function add_about() {
+function add_about(textarea_name) {
     'use strict';
-    var el = $('textarea[name="body"]');
+    var el = $('textarea[name="'+ textarea_name + '"]');
     var about = "[align=center][b][u]About the game[/u][/b][/align]";
     if (el.val().indexOf(about) == -1) {
         el.val(about + "\n" + el.val());
     }
 }
 
-function remove_junk() {
+function remove_junk(textarea_name) {
     'use strict';
-    var el = $('textarea[name="body"]');
+    var el = $('textarea[name="' + textarea_name + '"]');
     var res = el.val()
         .replace(/™/g, "")
         .replace(/©/g, "")
@@ -68,17 +140,17 @@ function remove_junk() {
     el.val(res);
 }
 
-function get_reqs() {
+function get_reqs(textarea_name) {
     'use strict';
-    return $('textarea[name="body"]').val()
+    return $('textarea[name="' + textarea_name + '"]').val()
         .split("[quote]")[1]
         .split("[/quote]")[0]
         .replace(/.*System requirements.*/gi, "");
 }
 
-function set_reqs(s) {
+function set_reqs(s, textarea_name) {
     'use strict';
-    var el = $('textarea[name="body"]');
+    var el = $('textarea[name="' + textarea_name + '"]');
     var desc = el.val().split("[quote]")[0];
     if ($('.welcome .username').html() != "LinkinsRepeater") {
         if (s.indexOf("[b]Minimum") == 0) { s = "\n" + s; }
@@ -101,9 +173,9 @@ function removebb(s) {
         .replace("[*]", "");
 }
 
-function fix_about() {
+function fix_about(textarea_name) {
     'use strict';
-    var lines = $('textarea[name="body"]').val().split("\n");
+    var lines = $('textarea[name="' + textarea_name + '"]').val().split("\n");
     var newcont = "";
     lines.forEach(function(s) {
         s = s.trim();
@@ -114,12 +186,12 @@ function fix_about() {
         }
         newcont += s + "\n";
     });
-    $('textarea[name="body"]').val(newcont.trim());
+    $('textarea[name="' + textarea_name + '"]').val(newcont.trim());
 }
 
-function fix_features() {
+function fix_features(textarea_name) {
     'use strict';
-    var lines = $('textarea[name="body"]').val().split("\n");
+    var lines = $('textarea[name="' + textarea_name + '"]').val().split("\n");
     var newcont = "";
     lines.forEach(function(s) {
         s = s.trim();
@@ -133,7 +205,7 @@ function fix_features() {
         }
         newcont += s + "\n";
     });
-    $('textarea[name="body"]').val(newcont.trim());
+    $('textarea[name="' + textarea_name + '"]').val(newcont.trim());
 }
 
 function normald(s) {
@@ -151,10 +223,10 @@ function normald(s) {
     return s.replace("  ", " ").replace("  ", " ").replace("  ", " ").replace("  ", " ");
 }
 
-function fix_reqs() {
+function fix_reqs(textarea_name) {
     'use strict';
     var reqs = get_reqs().split('\n');
     var newreqs = "";
     reqs.forEach(function(r){ newreqs = newreqs + normald(r) + "\n"; });
-    set_reqs(newreqs.trim());
+    set_reqs(newreqs.trim(), textarea_name);
 }
