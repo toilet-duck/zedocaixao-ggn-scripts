@@ -56,6 +56,7 @@ function add_user_macro() {
 function clear_macros() {
     'use strict';
     GM_SuperValue.set("user_macros", {});
+    window.alert("Macros successfully cleared. Refresh page for changes to take effect.");
 }
 
 function callback_args(callback, textarea_name) {
