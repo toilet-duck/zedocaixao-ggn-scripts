@@ -230,7 +230,7 @@ function normald(s) {
 
 function fix_reqs(textarea_name) {
     'use strict';
-    var reqs = get_reqs().split('\n');
+    var reqs = get_reqs(textarea_name).split('\n');
     var newreqs = "";
     reqs.forEach(function(r){ newreqs = newreqs + normald(r) + "\n"; });
     set_reqs(newreqs.trim(), textarea_name);
