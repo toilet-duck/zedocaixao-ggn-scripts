@@ -7,7 +7,7 @@
 // @include      https://gazellegames.net/torrents.php?action=edit*
 // @include      https://gazellegames.net/upload.php*
 // @require      https://code.jquery.com/jquery-3.1.0.min.js
-// @require      https://userscripts-mirror.org/scripts/source/107941.user.js
+// @require      https://greasyfork.org/scripts/370520-super-gm-set-and-get/code/Super%20GM%20set%20and%20get.js?version=614650
 // @grant        GM_xmlhttpRequest
 // @grant        GM.xmlhttpRequest
 // @grant        GM_setValue
