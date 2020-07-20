@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         GGn Description prettify
 // @namespace    http://tampermonkey.net/
-// @version      0.6.0a
+// @version      0.6.0b
 // @description  Helper functions for description formatting
 // @author       ZeDoCaixao
-// @include      https://gazellegames.net/torrents.php?action=editgroup*
+// @include      https://gazellegames.net/torrents.php?action=edit*
 // @include      https://gazellegames.net/upload.php*
 // @require      https://code.jquery.com/jquery-3.1.0.min.js
 // @require      https://userscripts-mirror.org/scripts/source/107941.user.js
@@ -25,7 +25,11 @@ function addButton(id, title, callback, textarea_name) {
 
 function get_textarea_names() {
     if (window.location.pathname == '/torrents.php') {
-        var textarea_names = ["body"];
+        if (/action=editgroup/.test(window.location.search)) {
+            var textarea_names = ["body"];
+        } else {
+            var textarea_names = ["release_desc"];
+        }
     } else {
         var textarea_names = ["album_desc", "release_desc"];
     }
