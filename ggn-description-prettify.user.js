@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Description prettify
 // @namespace    http://tampermonkey.net/
-// @version      0.6.0b
+// @version      0.6.0c
 // @description  Helper functions for description formatting
 // @author       ZeDoCaixao
 // @include      https://gazellegames.net/torrents.php?action=edit*
@@ -16,7 +16,10 @@
 /* globals jQuery, $ */
 
 function addButton(id, title, callback, textarea_name) {
-    id = "prettify_"+id+textarea_name;
+    ascii_id = id
+        .split('')
+        .map(x=>x.charCodeAt(0)).join('_')
+    id = "prettify_"+ascii_id+"_"+textarea_name;
 
     $('textarea[name="' + textarea_name + '"]')
         .after('<input type="button" id="'+id+'" value="'+title+'"/>');
@@ -78,7 +81,7 @@ function callback_args(callback, textarea_name) {
     var textarea_names = get_textarea_names();
     for (var textarea_name of textarea_names) {
         for (var key in macros) {
-            addButton(key.replace(" ", "_"), key, add_macro(macros[key], textarea_name), textarea_name);
+            addButton(key, key, add_macro(macros[key], textarea_name), textarea_name);
         }
         addButton("removejunk", "Remove Junk", callback_args(remove_junk, textarea_name), textarea_name);
         addButton("fixfeatures", "Fix Features", callback_args(fix_features, textarea_name), textarea_name);
