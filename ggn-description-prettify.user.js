@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Description prettify
 // @namespace    http://tampermonkey.net/
-// @version      0.6.0c
+// @version      0.6.0d
 // @description  Helper functions for description formatting
 // @author       ZeDoCaixao
 // @include      https://gazellegames.net/torrents.php?action=edit*
