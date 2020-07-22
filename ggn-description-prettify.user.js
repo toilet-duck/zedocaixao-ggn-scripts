@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         GGn Description prettify
 // @namespace    http://tampermonkey.net/
-// @version      0.6.0c
+// @version      0.6.0d
 // @description  Helper functions for description formatting
 // @author       ZeDoCaixao
 // @include      https://gazellegames.net/torrents.php?action=edit*
 // @include      https://gazellegames.net/upload.php*
 // @require      https://code.jquery.com/jquery-3.1.0.min.js
 // @require      https://greasyfork.org/scripts/370520-super-gm-set-and-get/code/Super%20GM%20set%20and%20get.js?version=614650
+// @require      https://greasyfork.org/scripts/5392-waitforkeyelements/code/WaitForKeyElements.js?version=115012
 // @grant        GM_xmlhttpRequest
 // @grant        GM.xmlhttpRequest
 // @grant        GM_setValue
@@ -15,8 +16,10 @@
 // ==/UserScript==
 /* globals jQuery, $ */
 
+"use strict";
+
 function addButton(id, title, callback, textarea_name) {
-    ascii_id = id
+    var ascii_id = id
         .split('')
         .map(x=>x.charCodeAt(0)).join('_')
     id = "prettify_"+ascii_id+"_"+textarea_name;
@@ -46,7 +49,6 @@ function add_macro(a, textarea_name) {
 }
 
 function add_user_macro() {
-    'use strict';
     var button_name = window.prompt("Enter the button name (i.e. Add About):");
     var macro_text = window.prompt("Enter the macro text (i.e. [align=center][b][u]About the game[/u][/b][/align]):");
     console.log("'button_name' = " + button_name + "'macro_text' = " + macro_text);
@@ -61,7 +63,6 @@ function add_user_macro() {
 }
 
 function clear_macros() {
-    'use strict';
     GM_SuperValue.set("user_macros", {});
     window.alert("Macros successfully cleared. Refresh page for changes to take effect.");
 }
@@ -72,12 +73,7 @@ function callback_args(callback, textarea_name) {
     }
 }
 
-(function() {
-    'use strict';
-
-    var macros = GM_SuperValue.get("user_macros", {});
-    console.log(macros);
-
+function redraw(macros) {
     var textarea_names = get_textarea_names();
     for (var textarea_name of textarea_names) {
         for (var key in macros) {
@@ -93,12 +89,22 @@ function callback_args(callback, textarea_name) {
 
         addButton("clear_macros", "Clear ALL Macros", clear_macros, textarea_name);
         addButton("add_macro", "Add Macro", add_user_macro, textarea_name);
+    }
+}
 
+(function() {
+    var macros = GM_SuperValue.get("user_macros", {});
+    console.log(macros);
+
+    var textarea_names = ["body", "release_desc"];
+    for (var textarea_name of textarea_names) {
+        waitForKeyElements("textarea#" + textarea_name, (element) => {
+            redraw(macros);
+        });
     }
 })();
 
 function add_macro_args(macro_text, textarea_name) {
-  'use strict';
   var el = $('textarea[name="' + textarea_name + '"]');
 
   var cursorPos = $('textarea[name="' + textarea_name + '"]').prop('selectionStart');
@@ -119,7 +125,6 @@ function makeitgood(textarea_name) {
 }
 
 function fix_caps(textarea_name) {
-    'use strict';
     var el = $('textarea[name="' + textarea_name + '"]');
     var res = el.val()
         .replace("KEY FEATURES", "KEY FEATURES")
@@ -130,7 +135,6 @@ function fix_caps(textarea_name) {
 }
 
 function add_about(textarea_name) {
-    'use strict';
     var el = $('textarea[name="'+ textarea_name + '"]');
     var about = "[align=center][b][u]About the game[/u][/b][/align]";
     if (el.val().indexOf(about) == -1) {
@@ -139,7 +143,6 @@ function add_about(textarea_name) {
 }
 
 function remove_junk(textarea_name) {
-    'use strict';
     var el = $('textarea[name="' + textarea_name + '"]');
     var res = el.val()
         .replace(/™/g, "")
@@ -149,7 +152,6 @@ function remove_junk(textarea_name) {
 }
 
 function get_reqs(textarea_name) {
-    'use strict';
     return $('textarea[name="' + textarea_name + '"]').val()
         .split("[quote]")[1]
         .split("[/quote]")[0]
@@ -157,7 +159,6 @@ function get_reqs(textarea_name) {
 }
 
 function set_reqs(s, textarea_name) {
-    'use strict';
     var el = $('textarea[name="' + textarea_name + '"]');
     var desc = el.val().split("[quote]")[0];
     if ($('.welcome .username').html() != "LinkinsRepeater") {
@@ -167,7 +168,6 @@ function set_reqs(s, textarea_name) {
 }
 
 function removebb(s) {
-    'use strict';
     return s
         .replace("[b]", "")
         .replace("[i]", "")
@@ -182,7 +182,6 @@ function removebb(s) {
 }
 
 function fix_about(textarea_name) {
-    'use strict';
     var lines = $('textarea[name="' + textarea_name + '"]').val().split("\n");
     var newcont = "";
     lines.forEach(function(s) {
@@ -198,7 +197,6 @@ function fix_about(textarea_name) {
 }
 
 function fix_features(textarea_name) {
-    'use strict';
     var lines = $('textarea[name="' + textarea_name + '"]').val().split("\n");
     var newcont = "";
     lines.forEach(function(s) {
@@ -217,7 +215,6 @@ function fix_features(textarea_name) {
 }
 
 function normald(s) {
-    'use strict';
     if (s.indexOf("[b]Minimum") != -1
        || s.trim().replace(/:$/, "") == "Minimum"
        || s.indexOf("[b]Recommended") != -1
@@ -232,7 +229,6 @@ function normald(s) {
 }
 
 function fix_reqs(textarea_name) {
-    'use strict';
     var reqs = get_reqs(textarea_name).split('\n');
     var newreqs = "";
     reqs.forEach(function(r){ newreqs = newreqs + normald(r) + "\n"; });
