@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Description prettify
 // @namespace    http://tampermonkey.net/
-// @version      0.6.0d
+// @version      0.6.0e
 // @description  Helper functions for description formatting
 // @author       ZeDoCaixao
 // @include      https://gazellegames.net/torrents.php?action=edit*
@@ -97,10 +97,15 @@ function redraw(macros) {
     console.log(macros);
 
     var textarea_names = ["body", "release_desc"];
+    var configured = false;
     for (var textarea_name of textarea_names) {
         waitForKeyElements("textarea#" + textarea_name, (element) => {
             redraw(macros);
+            configured = true;
         });
+    }
+    if (! configured) {
+        redraw(macros);
     }
 })();
 
